@@ -1,9 +1,17 @@
 # This serves as a template which will guide you through the implementation of this task. It is advised
 # to first read the whole template and get a sense of the overall structure of the code before trying to fill in any of the TODO gaps
 # First, we import necessary libraries:
+import random
 import pandas as pd
 import numpy as np
+from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import KFold
+from sklearn.linear_model import Ridge
+
+
+def seed_everything(seed=0):
+    np.random.seed(seed)
+    random.seed(seed)
 
 
 def fit(X, y, lam):
@@ -68,7 +76,16 @@ def average_LR_RMSE(X, y, lambdas, n_folds):
 
     # TODO: Enter your code here. Hint: Use functions 'fit' and 'calculate_RMSE' with training and test data
     # and fill all entries in the matrix 'RMSE_mat'
-
+    seed = 0
+    kf = KFold(n_splits=n_folds, shuffle=True, random_state=seed)
+    # kf = KFold(n_splits=n_folds)
+    for split_index, (train_index, test_index) in enumerate(kf.split(X)):
+        for lambda_index, lam in enumerate(lambdas):
+            model = Ridge(alpha=lam, random_state=seed)
+            model.fit(X[train_index], y[train_index])
+            y_pred = model.predict(X[test_index])
+            y_test = y[test_index]
+            RMSE_mat[split_index, lambda_index] = mean_squared_error(y_test, y_pred, squared=False)
     avg_RMSE = np.mean(RMSE_mat, axis=0)
     assert avg_RMSE.shape == (5,)
     return avg_RMSE
@@ -76,6 +93,8 @@ def average_LR_RMSE(X, y, lambdas, n_folds):
 
 # Main function. You don't have to change this
 if __name__ == "__main__":
+    # Setting seed for reproducible results
+    seed_everything(seed=0)
     # Data loading
     data = pd.read_csv("train.csv")
     y = data["y"].to_numpy()
