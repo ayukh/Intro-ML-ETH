@@ -3,7 +3,7 @@
 # First, we import necessary libraries:
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 
 
 def transform_data(X):
@@ -25,14 +25,11 @@ def transform_data(X):
     X_transformed: array of floats: dim = (700,21), transformed input with 21 features
     """
     X_transformed = np.zeros((700, 21))
-    # TODO: Enter your code here
     X_transformed[:, 0:5] = X
     X_transformed[:, 5:10] = np.square(X)
     X_transformed[:, 10:15] = np.exp(X)
     X_transformed[:, 15:20] = np.cos(X)
-    # X_transformed[:, 20] = 1
     assert X_transformed.shape == (700, 21)
-    # print(X_transformed[:5 ,:])
     return X_transformed
 
 
@@ -52,14 +49,9 @@ def fit(X, y):
     """
     w = np.zeros((21,))
     X_transformed = transform_data(X)
-    # TODO: Enter your code here
-    model = LinearRegression()
+    model = Ridge(alpha=0.01, random_state=0)
     model.fit(X_transformed[:, :-1], y)
     w = np.append(model.coef_, model.intercept_)
-    # w_0 = w[0]
-    # w = np.delete(w, 0)
-    # w = np.append(w, w_0)
-    print(w)
     assert w.shape == (21,)
     return w
 
