@@ -41,7 +41,3 @@ Inside the directory execute:
 ```
 jupyter notebook
 ```
-
-(it should open browser)
-and then navigate to **/notebooks** folder.
-
