@@ -54,8 +54,12 @@ def fit(X, y):
     X_transformed = transform_data(X)
     # TODO: Enter your code here
     model = LinearRegression()
-    model.fit(X_transformed, y)
-    w = model.coef_
+    model.fit(X_transformed[:, :-1], y)
+    w = np.append(model.coef_, model.intercept_)
+    # w_0 = w[0]
+    # w = np.delete(w, 0)
+    # w = np.append(w, w_0)
+    print(w)
     assert w.shape == (21,)
     return w
 
