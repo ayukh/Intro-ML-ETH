@@ -1,2 +1,4 @@
 *.idea
 *task3/dataset
+*.csv
+*.csv.zip
