@@ -11,7 +11,7 @@ All commands should be run inside the CMD (Command Line) inside the folder of th
 
 ```
 conda env remove --name iml-2023
-conda create -n iml-2023 python=3.9
+conda create -n iml-2023
 ```
 
 - Activate environment:
@@ -23,7 +23,7 @@ conda activate iml-2023
 - Install dependencies:
 
 ```
-conda env update --file environment.yml
+conda env update --file environment.yml --prune
 ```
 
 # Running
