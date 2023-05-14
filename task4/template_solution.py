@@ -1,14 +1,12 @@
 # This serves as a template which will guide you through the implementation of this task.  It is advised
 # to first read the whole template and get a sense of the overall structure of the code before trying to fill in any of the TODO gaps
 # First, we import necessary libraries:
-import pandas as pd
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
-
-from sklearn.model_selection import train_test_split
 from sklearn.base import BaseEstimator, TransformerMixin
-
+from sklearn.model_selection import train_test_split
 
 
 def load_data():
@@ -23,17 +21,21 @@ def load_data():
             y_train: np.ndarray, the labels of the training set
             x_test: np.ndarray, the features of the test set
     """
-    x_pretrain = pd.read_csv("public/pretrain_features.csv.zip", index_col="Id", compression='zip').drop("smiles", axis=1).to_numpy()
+    x_pretrain = pd.read_csv("public/pretrain_features.csv.zip", index_col="Id", compression='zip').drop("smiles",
+                                                                                                         axis=1).to_numpy()
     y_pretrain = pd.read_csv("public/pretrain_labels.csv.zip", index_col="Id", compression='zip').to_numpy().squeeze(-1)
-    x_train = pd.read_csv("public/train_features.csv.zip", index_col="Id", compression='zip').drop("smiles", axis=1).to_numpy()
+    x_train = pd.read_csv("public/train_features.csv.zip", index_col="Id", compression='zip').drop("smiles",
+                                                                                                   axis=1).to_numpy()
     y_train = pd.read_csv("public/train_labels.csv.zip", index_col="Id", compression='zip').to_numpy().squeeze(-1)
     x_test = pd.read_csv("public/test_features.csv.zip", index_col="Id", compression='zip').drop("smiles", axis=1)
     return x_pretrain, y_pretrain, x_train, y_train, x_test
+
 
 class Net(nn.Module):
     """
     The model class, which defines our feature extractor used in pretraining.
     """
+
     def __init__(self):
         """
         The constructor of the model.
@@ -41,7 +43,6 @@ class Net(nn.Module):
         super().__init__()
         # TODO: Define the architecture of the model. It should be able to be trained on pretraing data 
         # and then used to extract features from the training and test data.
-
 
     def forward(self, x):
         """
@@ -54,7 +55,8 @@ class Net(nn.Module):
         # TODO: Implement the forward pass of the model, in accordance with the architecture 
         # defined in the constructor.
         return x
-    
+
+
 def make_feature_extractor(x, y, batch_size=256, eval_size=1000):
     """
     This function trains the feature extractor on the pretraining data and returns a function which
@@ -76,11 +78,9 @@ def make_feature_extractor(x, y, batch_size=256, eval_size=1000):
     # model declaration
     model = Net()
     model.train()
-    
+
     # TODO: Implement the training loop. The model should be trained on the pretraining data. Use validation set 
     # to monitor the loss.
-
-
 
     def make_features(x):
         """
@@ -98,6 +98,7 @@ def make_feature_extractor(x, y, batch_size=256, eval_size=1000):
 
     return make_features
 
+
 def make_pretraining_class(feature_extractors):
     """
     The wrapper function which makes pretraining API compatible with sklearn pipeline
@@ -111,6 +112,7 @@ def make_pretraining_class(feature_extractors):
         """
         The wrapper class for Pretraining pipeline.
         """
+
         def __init__(self, *, feature_extractor=None, mode=None):
             self.feature_extractor = feature_extractor
             self.mode = mode
@@ -122,8 +124,9 @@ def make_pretraining_class(feature_extractors):
             assert self.feature_extractor is not None
             X_new = feature_extractors[self.feature_extractor](X)
             return X_new
-        
+
     return PretrainedFeatures
+
 
 def get_regression_model():
     """
@@ -138,6 +141,7 @@ def get_regression_model():
     model = None
     return model
 
+
 # Main function. You don't have to change this
 if __name__ == '__main__':
     # Load data
@@ -145,9 +149,9 @@ if __name__ == '__main__':
     print("Data loaded!")
     # Utilize pretraining data by creating feature extractor which extracts lumo energy 
     # features from available initial features
-    feature_extractor =  make_feature_extractor(x_pretrain, y_pretrain)
+    feature_extractor = make_feature_extractor(x_pretrain, y_pretrain)
     PretrainedFeatureClass = make_pretraining_class({"pretrain": feature_extractor})
-    
+
     # regression model
     regression_model = get_regression_model()
 
