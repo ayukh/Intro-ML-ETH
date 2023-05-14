@@ -1,15 +1,18 @@
 name: iml-2023
 channels:
   - conda-forge
+  - pytorch
 dependencies:
   - python=3.9
-  - numpy=1.24.2
+  - numpy=1.24.3
   - pandas=1.5.3
+  - pytorch=2.0.0
+  - torchvision=0.15.0
   - matplotlib=3.5.2
-  - jupyterlab=3.3.3
   - scikit-learn=1.2.2
   - pip=22.1.2
   - seaborn=0.11.2
-  - ipykernel=5.5.5
+  - ipykernel=6.22.0
   - openpyxl=3.0.9
   - xgboost=1.7.4
+  - tqdm=4.65.0
